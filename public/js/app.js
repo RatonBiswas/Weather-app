@@ -1,6 +1,6 @@
 // const { json } = require("express");
 
-console.log('this is client site loaded!!');
+// console.log('this is client site loaded!!');
 const weatherForm = document.querySelector('form');
 const searchForm = document.querySelector('input');
 
