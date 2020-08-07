@@ -7,39 +7,39 @@ const forecast = require('./utils/forecast');
 
 const app = express();
 const port = process.env.PORT || 3000;
-//Define paths for express config
+// ** Define paths for express config
 const publicDirectoryPath = path.join(__dirname, '../public');
 const viewsPath = path.join(__dirname, '../templates/views');
 const partialsPath = path.join(__dirname, '../templates/partials')
 
-// Setup handlebars engine and views location
+// **  Setup handlebars engine and views location
 app.set('view engine', 'hbs');
 app.set('views', viewsPath);
 hbs.registerPartials(partialsPath);
 
-// Setup static directory to serve static files
+// ** Setup static directory to serve static files
 app.use(express.static(publicDirectoryPath));
 
 app.get('', (req, res) => {
-    res.render('index', {
+    res.render('index', {    // ! home page
         "title": "Weather App",
         "name": "Raton Biswas"
     });
 });
-app.get('/about', (req, res) => {
+app.get('/about', (req, res) => {  // ! about page
     res.render('about', {
         "title": "About me",
         "name": "Raton Biswas"
     })
 })
-app.get('/help', (req, res) => {
+app.get('/help', (req, res) => { // ! help page
     res.render('help', {
         "title": "Help",
         "name": "Raton Biswas",
-        "message": "Hello World"
+        "message": "This is some helpful text"
     })
 })
-app.get('/weather', (req, res) => {
+app.get('/weather', (req, res) => {  // ! weather page
     // let address = req.body.address;
     if (!req.query.address) {
         return res.send({
@@ -50,7 +50,8 @@ app.get('/weather', (req, res) => {
     geocode(req.query.address, (error, {
         latitude,
         longitude,
-        location
+        location,
+        shortCode
     } = {}) => {
         if (error) {
             return res.send({
@@ -70,14 +71,21 @@ app.get('/weather', (req, res) => {
             res.send({
                 forecast: forecastData,
                 location,
-                address: req.query.address
+                address: req.query.address,
+                shortCode
+                // time,
+                // summary,
+                // humidity,
+                // icon,
+                // windSpeed
+
             });
         })
     })
 })
 
 
-app.get('/products', (req, res) => {
+app.get('/products', (req, res) => {  // ! products page
     if (!req.query.search) {
         return res.send({
             error: 'You must provide a search term.'
@@ -88,7 +96,7 @@ app.get('/products', (req, res) => {
         products: []
     })
 })
-app.get('/help/*', (req, res) => {
+app.get('/help/*', (req, res) => {  // ! error page
     res.render('404', {
         "title": "404",
         "name": "Raton Biswas",
@@ -96,7 +104,7 @@ app.get('/help/*', (req, res) => {
     })
 })
 
-app.get('*', (req, res) => {
+app.get('*', (req, res) => {  // ! error page
     res.render('404', {
         "title": "404",
         "name": "Raton Biswas",
